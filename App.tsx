@@ -1,4 +1,4 @@
-import { Loading } from "@components/loading";
+import { Loading } from "@components/Loading";
 import {
   Roboto_400Regular,
   Roboto_700Bold,
