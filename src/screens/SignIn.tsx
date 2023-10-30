@@ -8,7 +8,7 @@ import { Input } from "@components/Input";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 export function SignIn() {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>(); //tipei a rota com a tipagem criada anteriormente com os valores de NativeStackNavigationProp<AuthRoutes>
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   function handleNewAccount() {
     navigation.navigate("signUp");
