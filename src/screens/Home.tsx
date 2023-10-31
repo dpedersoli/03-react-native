@@ -40,7 +40,7 @@ export function Home() {
             Exercícios
           </Heading>
           <Text color="gray.200" fontSize="sm">
-            4
+            44
           </Text>
         </HStack>
       </VStack>
