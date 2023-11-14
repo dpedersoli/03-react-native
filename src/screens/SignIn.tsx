@@ -23,7 +23,7 @@ export function SignIn() {
         <Image
           source={BackgroundImg}
           defaultSource={BackgroundImg}
-          alt="imagem de um homem sem camisa e uma mulher, ambos andando em biscicletas ergométricas"
+          alt="imagem de um homem sem camisa e uma mulher, ambos usando biscicletas ergométricas"
           position="absolute"
           resizeMode="contain"
         />
