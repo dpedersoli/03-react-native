@@ -58,8 +58,8 @@ export function SignUp() {
 
   async function handleSignUp({ name, email, password }: formDataProps) {
     try {
-      const response = await api.post("/users", { name, email, password }); //'api' já trás os métodos do axios + o 'baseURL', ficando como se fosse "axios.post(`${api}/users`)", porém, o 'axios' resume isso
-      console.log("response.data: ", response.data); //já vem convertido em '.json()'
+      const response = await api.post("/users", { name, email, password });
+      console.log("response.data: ", response.data);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError

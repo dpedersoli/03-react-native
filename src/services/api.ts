@@ -9,12 +9,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.data) {
-      //verifica se o erro é um erro já tratado no backend -> então eu reaproveito ela no frontend e uso
       return Promise.reject(new AppError(error.response.data.message));
     } else {
-      return Promise.reject(error); //retorno de erro genérico
+      return Promise.reject(error);
     }
   }
-); //se der certo ele irá enviar o 'response'; se der errado vai enviar o 'error'
+);
 
 export { api };
