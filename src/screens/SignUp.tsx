@@ -1,4 +1,12 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+  useToast,
+} from "native-base";
 
 import BackgroundImg from "@assets/background.png";
 import LogoSvg from "@assets/logo.svg";
@@ -6,6 +14,8 @@ import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -30,6 +40,8 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
+  const toast = useToast();
+
   const {
     control,
     handleSubmit,
@@ -44,22 +56,22 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp({
-    name,
-    email,
-    password,
-    password_confirm,
-  }: formDataProps) {
-    console.log(
-      "name: ",
-      name,
-      "email: ",
-      email,
-      "password: ",
-      password,
-      "password_confirm: ",
-      password_confirm
-    );
+  async function handleSignUp({ name, email, password }: formDataProps) {
+    try {
+      const response = await api.post("/users", { name, email, password }); //'api' já trás os métodos do axios + o 'baseURL', ficando como se fosse "axios.post(`${api}/users`)", porém, o 'axios' resume isso
+      console.log("response.data: ", response.data); //já vem convertido em '.json()'
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível criar a conta. Tsnte novamente mais tarde";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   return (
@@ -130,7 +142,7 @@ export function SignUp() {
             name="password_confirm"
             render={({ field: { onChange, value } }) => (
               <Input
-                placeholder="Senha"
+                placeholder="Confirmar senha"
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
