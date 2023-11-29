@@ -11,7 +11,7 @@ type AuthContextProviderProps = {
 
 export const AuthContext = createContext<AuthContextDataProps>(
   {} as AuthContextDataProps
-); //é do tipo "<AuthContextDataProps>" e o valor inicial é um "{}" do tipo "AuthContextDataProps"
+);
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   return (
