@@ -5,13 +5,31 @@ import BackgroundImg from "@assets/background.png";
 import LogoSvg from "@assets/logo.svg";
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
+import { useAuth } from "@hooks/userAuth";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { useForm } from "react-hook-form";
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export function SignIn() {
+  const { signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   function handleNewAccount() {
     navigation.navigate("signUp");
+  }
+
+  function handleSignIn({ email, password }: FormData) {
+    signIn(email, password);
   }
 
   return (
@@ -48,7 +66,12 @@ export function SignIn() {
 
           <Input placeholder="Senha" secureTextEntry />
 
-          <Button title="Acessar" />
+          <Button
+            title="Acessar"
+            onPress={() => {
+              handleSignIn;
+            }}
+          />
         </Center>
 
         <Center mt={24}>
