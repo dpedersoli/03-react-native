@@ -7,7 +7,7 @@ import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { useAuth } from "@hooks/userAuth";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 type FormData = {
   email: string;
@@ -15,21 +15,22 @@ type FormData = {
 };
 
 export function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn } = useAuth(); //por meio do compartilhamento de contextos entre as rotas, a função de 'sigIn' está sendo compartilhada e usada em 'AuthContext' com os dados passados daqui
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   function handleNewAccount() {
     navigation.navigate("signUp");
   }
 
-  function handleSignIn({ email, password }: FormData) {
-    signIn(email, password);
+  async function handleSignIn({ email, password }: FormData) {
+    //como a função 'signIn' é async (pois faz requisição com DB por meio de uma api), eu preciso também especificar aqui que é uma função async-await
+    await signIn(email, password);
   }
 
   return (
@@ -58,20 +59,37 @@ export function SignIn() {
             Acesse sua conta
           </Heading>
 
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: "Informe o e-mail" }}
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="E-mail"
+                keyboardType="email-address"
+                onChangeText={onChange}
+                errorMessage={errors.email?.message}
+                autoCapitalize="none"
+              />
+            )}
           />
 
-          <Input placeholder="Senha" secureTextEntry />
-
-          <Button
-            title="Acessar"
-            onPress={() => {
-              handleSignIn;
-            }}
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: "Informe a senha" }}
+            render={({ field: { onChange } }) => (
+              <Input
+                placeholder="Senha"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+                onSubmitEditing={handleSubmit(handleSignIn)}
+              />
+            )}
           />
+
+          <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
         </Center>
 
         <Center mt={24}>
