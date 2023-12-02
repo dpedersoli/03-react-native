@@ -1,5 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+  useToast,
+} from "native-base";
 
 import BackgroundImg from "@assets/background.png";
 import LogoSvg from "@assets/logo.svg";
@@ -7,6 +15,8 @@ import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { useAuth } from "@hooks/userAuth";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { AppError } from "@utils/AppError";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 type FormData = {
@@ -15,8 +25,10 @@ type FormData = {
 };
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth(); //por meio do compartilhamento de contextos entre as rotas, a função de 'sigIn' está sendo compartilhada e usada em 'AuthContext' com os dados passados daqui
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const toast = useToast();
 
   const {
     control,
@@ -30,7 +42,24 @@ export function SignIn() {
 
   async function handleSignIn({ email, password }: FormData) {
     //como a função 'signIn' é async (pois faz requisição com DB por meio de uma api), eu preciso também especificar aqui que é uma função async-await
-    await signIn(email, password);
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError; //se aqui for uma instância de 'AppError', então ele retornará um valor booleano (true or false)
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível entrar. Tente novamente mais tarde.";
+
+      setIsLoading(false);
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   return (
@@ -89,7 +118,11 @@ export function SignIn() {
             )}
           />
 
-          <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
+          <Button
+            title="Acessar"
+            onPress={handleSubmit(handleSignIn)}
+            isLoading={isLoading}
+          />
         </Center>
 
         <Center mt={24}>
