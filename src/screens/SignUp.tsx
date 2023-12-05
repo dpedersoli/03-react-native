@@ -57,14 +57,17 @@ export function SignUp() {
   }
 
   async function handleSignUp({ name, email, password }: formDataProps) {
+    console.log("name: ", name);
+    console.log("email: ", email);
+    console.log("password: ", password);
     try {
       const response = await api.post("/users", { name, email, password });
-      console.log("response.data: ", response.data);
+      console.log("response.data: ", response);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
-        : "Não foi possível criar a conta. Tsnte novamente mais tarde";
+        : "Não foi possível criar a conta. Tente novamente mais tarde";
 
       toast.show({
         title,

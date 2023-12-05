@@ -26,7 +26,7 @@ type FormData = {
 
 export function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth(); //por meio do compartilhamento de contextos entre as rotas, a função de 'sigIn' está sendo compartilhada e usada em 'AuthContext' com os dados passados daqui
+  const { signIn } = useAuth();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
 
@@ -41,12 +41,11 @@ export function SignIn() {
   }
 
   async function handleSignIn({ email, password }: FormData) {
-    //como a função 'signIn' é async (pois faz requisição com DB por meio de uma api), eu preciso também especificar aqui que é uma função async-await
     try {
       setIsLoading(true);
       await signIn(email, password);
     } catch (error) {
-      const isAppError = error instanceof AppError; //se aqui for uma instância de 'AppError', então ele retornará um valor booleano (true or false)
+      const isAppError = error instanceof AppError;
 
       const title = isAppError
         ? error.message

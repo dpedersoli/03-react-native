@@ -15,7 +15,6 @@ export function Routes() {
     <Box flex={1} bg="gray.700">
       <NavigationContainer theme={theme}>
         {user.id ? <AppRoutes /> : <AuthRoutes />}
-        {/* Se o usuário estiver logado, então ele pode navegar nas rotas da aplicação "AppRoutes", caso contrário, irá rodar nas rotas de/para autenticação "AuthRoutes"*/}
       </NavigationContainer>
     </Box>
   );
