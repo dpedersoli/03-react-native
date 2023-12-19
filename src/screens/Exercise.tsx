@@ -2,6 +2,7 @@ import BodySvg from "@assets/body.svg";
 import RepetitionsSvg from "@assets/repetitions.svg";
 import SeriesSvg from "@assets/series.svg";
 import { Button } from "@components/Button";
+import { Loading } from "@components/Loading";
 import { ExerciseDTO } from "@dtos/ExerciseDTO";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -14,7 +15,6 @@ import {
   Heading,
   Icon,
   Image,
-  ScrollView,
   Text,
   VStack,
   useToast,
@@ -27,6 +27,7 @@ type RouteParamsProps = {
 };
 
 export function Exercise() {
+  const [isLoading, setIsLoading] = useState(true);
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO); //crio um estado que armazena as informações do exercício com base na tipagem de ExerciseDTO
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -42,6 +43,7 @@ export function Exercise() {
 
   async function fetchExerciseDetails() {
     try {
+      setIsLoading(true);
       const response = await api.get(`/exercises/${exerciseId}`); //pego as informaões do exercício em específico com base na rota + ID do exercício seleconado
 
       setExercise(response.data);
@@ -57,6 +59,8 @@ export function Exercise() {
         placement: "top",
         bgColor: "red.500",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -95,7 +99,9 @@ export function Exercise() {
         </HStack>
       </VStack>
 
-      <ScrollView>
+      {isLoading ? (
+        <Loading />
+      ) : (
         <VStack p={8}>
           <Box rounded="lg" mb={3} overflow="hidden">
             <Image
@@ -134,7 +140,7 @@ export function Exercise() {
             <Button title="Marcar como realizado" onPress={() => {}} />
           </Box>
         </VStack>
-      </ScrollView>
+      )}
     </VStack>
   );
 }
