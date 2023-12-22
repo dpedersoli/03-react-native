@@ -53,7 +53,10 @@ const profileSchema = yup.object({
     .when("password", {
       is: (Field: any) => Field,
       then: (schema) =>
-        schema.nullable().required("Informe a confirmação da senha."),
+        schema
+          .nullable()
+          .required("Informe a confirmação da senha.")
+          .transform((value) => (!!value ? value : null)),
     }),
 });
 
@@ -105,10 +108,33 @@ export function Profile() {
           });
         }
 
-        setUserPhoto(photoSelected.assets[0].uri);
+        const fileExtension = photoSelected.assets[0].uri.split(".").pop(); //vai retornar somente a extensão da imagem ('.png', '.jpeg', etc)
+
+        const photoFile = {
+          name: `${user.name}.${fileExtension}`.toLocaleLowerCase(),
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any; //informações que a imagem precisa ter para envio para o backend; coloco 'as any' par a tipagem não reclamar
+
+        const userPhotoUploadForm = new FormData();
+        userPhotoUploadForm.append("avatar", photoFile); //'append' para anexar as informações; o nome do corpo exigido para envio do campo é 'avatar'
+
+        await api.patch("/users/avatar", userPhotoUploadForm, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }, //aqui eu deixo claro para o backend que o conteúdo não é mais do tipo JSON, mas sim, eu informo por meio do headers que o tipo dele é um 'multipart/form-data', e falo isso dizendo que ele irá através de um 'Content-Type'
+        });
+
+        toast.show({
+          title: "Foto atualizada!",
+          placement: "top",
+          bgColor: "green.500",
+        });
+
+        // setUserPhoto(photoSelected.assets[0].uri);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error: ", error);
     } finally {
       setPhotoIsLoading(false);
     }

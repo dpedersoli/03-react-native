@@ -15,7 +15,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 export type AuthContextDataProps = {
   user: UserDTO;
   signIn: (email: string, password: string) => Promise<void>;
-  updateUserProfile: (userUpdated: UserDTO) => Promise<void>;
+  updateUserProfile: (userUpdated: UserDTO) => Promise<void>; //passo aqui a função que atualiza o Context + LS com as informações de name -> essa função recebe as informações de 'UserDTO' por meio do parâmetro 'userUpdated' e retorna uma Promise vazia
   signOut: () => Promise<void>;
   isLoadingUserStorageData: boolean;
 };
@@ -87,7 +87,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     } catch (error) {
       throw error;
     }
-  }
+  } //essa função recebe as informações novas do usuário por meio do parâmetro 'userUpdated' e salva as informaçoes novas em 'user' que está sendo compartilhado por todo o 'Context' e também a salva no LS
 
   async function loadUserData() {
     try {
@@ -116,7 +116,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         user,
         signIn,
         signOut,
-        updateUserProfile,
+        updateUserProfile, //aqui compartilho a função de atualizar o name de user para o Context
         isLoadingUserStorageData,
       }}
     >
