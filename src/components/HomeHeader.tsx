@@ -3,6 +3,7 @@ import { HStack, Heading, Icon, Text, VStack } from "native-base";
 
 import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
 import { useAuth } from "@hooks/userAuth";
+import { api } from "@services/api";
 import { TouchableOpacity } from "react-native";
 import { UserPhoto } from "./UserPhoto";
 
@@ -12,7 +13,11 @@ export function HomeHeader() {
   return (
     <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems="center">
       <UserPhoto
-        source={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
+        source={
+          user.avatar
+            ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` } //aqui eu passo o baseURL e a rota em que a imagem está + o nome da imagem na rota (como se fosse seu ID)
+            : defaultUserPhotoImg
+        }
         size={16}
         alt="Imagem do usuário"
         mr={4}

@@ -1,3 +1,4 @@
+import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { ScreenHeader } from "@components/ScreenHeader";
@@ -63,9 +64,6 @@ const profileSchema = yup.object({
 export function Profile() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    "https://github.com/dpedersoli.png"
-  );
 
   const toast = useToast();
   const { user, updateUserProfile } = useAuth();
@@ -119,11 +117,20 @@ export function Profile() {
         const userPhotoUploadForm = new FormData();
         userPhotoUploadForm.append("avatar", photoFile); //'append' para anexar as informações; o nome do corpo exigido para envio do campo é 'avatar'
 
-        await api.patch("/users/avatar", userPhotoUploadForm, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          }, //aqui eu deixo claro para o backend que o conteúdo não é mais do tipo JSON, mas sim, eu informo por meio do headers que o tipo dele é um 'multipart/form-data', e falo isso dizendo que ele irá através de um 'Content-Type'
-        });
+        const avatarUpdatedResponse = await api.patch(
+          "/users/avatar",
+          userPhotoUploadForm,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }, //aqui eu deixo claro para o backend que o conteúdo não é mais do tipo JSON, mas sim, eu informo por meio do headers que o tipo dele é um 'multipart/form-data', e falo isso dizendo que ele irá através de um 'Content-Type'
+          }
+        );
+
+        const userUpdated = user; //seleciono a variável 'user' de dentro do context
+        userUpdated.avatar = avatarUpdatedResponse.data.avatar; //altero o valor da prop 'avatar' de dentro de variável 'user', do context, para a foto selecionada (e resgatada na 'avatarUpdatedResponse.data.avatar')
+
+        updateUserProfile(userUpdated);
 
         toast.show({
           title: "Foto atualizada!",
@@ -188,7 +195,11 @@ export function Profile() {
             />
           ) : (
             <UserPhoto
-              source={{ uri: userPhoto }}
+              source={
+                user.avatar
+                  ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` } //aqui eu passo o baseURL e a rota em que a imagem está + o nome da imagem na rota (como se fosse seu ID)
+                  : defaultUserPhotoImg
+              }
               alt="Foto do usuario"
               size={PHOTO_SIZE}
             />
