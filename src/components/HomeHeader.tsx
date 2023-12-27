@@ -15,7 +15,7 @@ export function HomeHeader() {
       <UserPhoto
         source={
           user.avatar
-            ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` } //aqui eu passo o baseURL e a rota em que a imagem está + o nome da imagem na rota (como se fosse seu ID)
+            ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` }
             : defaultUserPhotoImg
         }
         size={16}

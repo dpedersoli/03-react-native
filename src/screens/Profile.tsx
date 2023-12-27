@@ -106,16 +106,16 @@ export function Profile() {
           });
         }
 
-        const fileExtension = photoSelected.assets[0].uri.split(".").pop(); //vai retornar somente a extensão da imagem ('.png', '.jpeg', etc)
+        const fileExtension = photoSelected.assets[0].uri.split(".").pop();
 
         const photoFile = {
           name: `${user.name}.${fileExtension}`.toLocaleLowerCase(),
           uri: photoSelected.assets[0].uri,
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
-        } as any; //informações que a imagem precisa ter para envio para o backend; coloco 'as any' par a tipagem não reclamar
+        } as any;
 
         const userPhotoUploadForm = new FormData();
-        userPhotoUploadForm.append("avatar", photoFile); //'append' para anexar as informações; o nome do corpo exigido para envio do campo é 'avatar'
+        userPhotoUploadForm.append("avatar", photoFile);
 
         const avatarUpdatedResponse = await api.patch(
           "/users/avatar",
@@ -123,12 +123,12 @@ export function Profile() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-            }, //aqui eu deixo claro para o backend que o conteúdo não é mais do tipo JSON, mas sim, eu informo por meio do headers que o tipo dele é um 'multipart/form-data', e falo isso dizendo que ele irá através de um 'Content-Type'
+            },
           }
         );
 
-        const userUpdated = user; //seleciono a variável 'user' de dentro do context
-        userUpdated.avatar = avatarUpdatedResponse.data.avatar; //altero o valor da prop 'avatar' de dentro de variável 'user', do context, para a foto selecionada (e resgatada na 'avatarUpdatedResponse.data.avatar')
+        const userUpdated = user;
+        userUpdated.avatar = avatarUpdatedResponse.data.avatar;
 
         updateUserProfile(userUpdated);
 
@@ -137,8 +137,6 @@ export function Profile() {
           placement: "top",
           bgColor: "green.500",
         });
-
-        // setUserPhoto(photoSelected.assets[0].uri);
       }
     } catch (error) {
       console.log("error: ", error);
@@ -197,7 +195,7 @@ export function Profile() {
             <UserPhoto
               source={
                 user.avatar
-                  ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` } //aqui eu passo o baseURL e a rota em que a imagem está + o nome da imagem na rota (como se fosse seu ID)
+                  ? { uri: `${api.defaults.baseURL}avatar/${user.avatar}` }
                   : defaultUserPhotoImg
               }
               alt="Foto do usuario"
