@@ -111,12 +111,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, []);
 
   useEffect(() => {
-    const subscribe = api.registerInterceptTokenManager(signOut); //eu passo a função de deslogar ('singOut') para dentro do 'subscribe' e retorno o subscribe como o chamamento de uma função, para que ele efetue de fato o 'signOut'
+    const subscribe = api.registerInterceptTokenManager(signOut); //eu passo a função de 'singOut' para dentro do 'registerInterceptTokenManager' que é capaz de receber uma função de retorno vazio (que é justamente a de signOut que ele foi criado para receber)
 
     return () => {
       subscribe();
-    };
-  }, [signOut]);
+    }; //retorno o subscribe como o chamamento de uma função, para que ele efetue de fato o 'signOut'; O useEffect tem o seu retorno que é útil para limpeza da memória
+  }, [signOut]); //sempre que a função de 'signOut' for chamada, esse useEffect irá ser acionado e a memória será limpa forçadamente
 
   return (
     <AuthContext.Provider

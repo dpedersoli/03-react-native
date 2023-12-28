@@ -14,18 +14,28 @@ const api = axios.create({
 api.registerInterceptTokenManager = (signOut) => {
   const interceptTokenManager = api.interceptors.response.use(
     (response) => response,
-    (error) => {
-      if (error.response && error.response.data) {
-        return Promise.reject(new AppError(error.response.data.message));
+    (requestError) => {
+      if (requestError?.response?.status === 401) {
+        if (
+          requestError.response.data?.message === "token.expired" ||
+          requestError.response.data?.message === "token.invalid"
+        ) {
+        } //se o token é 'invalid/expired', então aqui eu vou fazer uma busca por um novem token; porém, se ele não não for um problema de token 'invalid' ou 'expired' então eu sigo dando um 'signOut()' nele para o usuário fazer um novo login e uma busca de um novo token em todo o fluxo de autenticação
+
+        signOut();
+      } //se o status do erro é '401', então temos uma requisição não-autorizada (indício que o erro é relacionado ao token)
+
+      if (requestError.response && requestError.response.data) {
+        return Promise.reject(new AppError(requestError.response.data.message));
       } else {
-        return Promise.reject(error);
+        return Promise.reject(requestError);
       }
     }
-  ); //'interceptTokenManager' será o interceptador para poder usar ele como um método 'interceptador'
+  ); // no 'registerInterceptTokenManager' eu já consigo acessar o método de 'signOut' pra dentro da função; Em 'interceptTokenManager' será o interceptador para poder usar ele como um método 'interceptador'
 
   return () => {
     api.interceptors.response.eject(interceptTokenManager);
-  };
+  }; //usa o método 'eject' do 'axios' no 'interceptTokenManager'
 };
 
 export { api };
