@@ -1,3 +1,4 @@
+import { storageAuthTokenGet } from "@storage/storageAuthToken";
 import { AppError } from "@utils/AppError";
 import axios, { AxiosInstance } from "axios";
 
@@ -14,12 +15,19 @@ const api = axios.create({
 api.registerInterceptTokenManager = (signOut) => {
   const interceptTokenManager = api.interceptors.response.use(
     (response) => response,
-    (requestError) => {
+    async (requestError) => {
       if (requestError?.response?.status === 401) {
         if (
           requestError.response.data?.message === "token.expired" ||
           requestError.response.data?.message === "token.invalid"
         ) {
+          const { refresh_token } = await storageAuthTokenGet(); //aqui eu recupero o 'refresh_token' direto do LS para validar sua existência
+
+          if (refresh_token) {
+            signOut();
+
+            return Promise.reject();
+          } //se o 'refresh_token' não existir, eu deslogo o usuário e retorno o erro do interceptor
         } //se o token é 'invalid/expired', então aqui eu vou fazer uma busca por um novem token; porém, se ele não não for um problema de token 'invalid' ou 'expired' então eu sigo dando um 'signOut()' nele para o usuário fazer um novo login e uma busca de um novo token em todo o fluxo de autenticação
 
         signOut();
