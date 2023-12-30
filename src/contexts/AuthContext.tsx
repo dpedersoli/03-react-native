@@ -48,7 +48,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       setIsLoadingUserStorageData(true);
 
       await storageUserSave(userData);
-      await storageAuthTokenSave({ token, refresh_token });
+      await storageAuthTokenSave({ token, refresh_token }); //aqui eu passo o token + refresh_token para ser salvo no LS por meio da função 'storageAuthTokenSave'
     } catch (error) {
       throw error;
     } finally {
