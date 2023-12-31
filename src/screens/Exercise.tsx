@@ -29,7 +29,7 @@ type RouteParamsProps = {
 export function Exercise() {
   const [sendingRegister, setSendingRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO); //crio um estado que armazena as informações do exercício com base na tipagem de ExerciseDTO
+  const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -75,7 +75,7 @@ export function Exercise() {
   async function fetchExerciseDetails() {
     try {
       setIsLoading(true);
-      const response = await api.get(`/exercises/${exerciseId}`); //pego as informaões do exercício em específico com base na rota + ID do exercício seleconado
+      const response = await api.get(`/exercises/${exerciseId}`);
 
       setExercise(response.data);
     } catch (error) {
@@ -138,7 +138,7 @@ export function Exercise() {
             <Image
               source={{
                 uri: `${api.defaults.baseURL}exercise/demo/${exercise.demo}`,
-              }} //aqui eu busquei um gif
+              }}
               w="full"
               h={80}
               alt="Nome do exercício"

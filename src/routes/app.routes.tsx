@@ -17,7 +17,7 @@ import { useTheme } from "native-base";
 
 type AppRoutes = {
   home: undefined;
-  exercise: { exerciseId: string }; //determino que nessa rota vou receber um objeto com 'exerciseId' do tipo string
+  exercise: { exerciseId: string };
   profile: undefined;
   history: undefined;
 };

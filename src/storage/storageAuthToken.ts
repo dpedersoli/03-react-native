@@ -15,7 +15,7 @@ export async function storageAuthTokenSave({
     AUTH_TOKEN_STORAGE,
     JSON.stringify({ token, refresh_token })
   );
-} //aqui eu salvo o token + refresh_token do LS
+}
 
 export async function storageAuthTokenGet() {
   const response = await AsyncStorage.getItem(AUTH_TOKEN_STORAGE);
@@ -25,7 +25,7 @@ export async function storageAuthTokenGet() {
     : {};
 
   return { token, refresh_token };
-} //aqui eu resgato o token + refresh_token do LS
+}
 
 export async function storageAuthTokenRemove() {
   await AsyncStorage.removeItem(AUTH_TOKEN_STORAGE);

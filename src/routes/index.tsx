@@ -13,7 +13,7 @@ export function Routes() {
   theme.colors.background = colors.gray[700];
 
   if (isLoadingUserStorageData) {
-    return <Loading />; //dessa forma ele aparece o componente de 'loading' ao invés de mostrar outra tela (tela de login) enquanto faz a autenticação do usuário
+    return <Loading />;
   }
 
   return (
